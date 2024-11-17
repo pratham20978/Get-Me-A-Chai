@@ -2,6 +2,7 @@ import Image from "next/image";
 import Devider from "@/components/Devider";
 
 export default function Home() {
+  
   return (
     <>
       <div className="flex justify-center items-center flex-col text-center text-white h-[44vh] gap-4">
