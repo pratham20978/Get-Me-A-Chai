@@ -3,4 +3,6 @@
 @tailwind utilities;
 
 
-
+.invertImg{
+    filter: invert(0.30)
+}

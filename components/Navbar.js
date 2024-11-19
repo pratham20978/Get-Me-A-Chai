@@ -11,7 +11,7 @@ const Navbar = () => {
     <nav className='bg-[#000000] text-white flex justify-between items-center px-4 h-16'>
       <div>
         <Link href="/" className="logo font-bold text-lg flex justify-center items-center">
-          <img src="/tea.gif" width={44} alt="" />
+          <img className='invertImg' src="/tea.gif" width={44} alt="" />
           <span>GetMeAChai!</span>
         </Link>
       </div>
@@ -38,11 +38,11 @@ const Navbar = () => {
             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
               <li>
                 <Link href="/dashboard" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                  Your Page
+                  Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</Link>
+                <Link href={`/${session.user.name}`} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Your Page</Link>
               </li>
               <li>
                 <Link onClick={() => { signOut() }} href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</Link>

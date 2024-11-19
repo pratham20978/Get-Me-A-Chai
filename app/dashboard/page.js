@@ -2,6 +2,7 @@
 import React from 'react'
 import { useSession, signIn } from "next-auth/react"
 import { useRouter } from 'next/navigation'
+import DashBoard from '@/components/DashBoard'
 
 const Dashboard = () => {
   const { data: session } = useSession()
@@ -9,10 +10,11 @@ const Dashboard = () => {
     const router = useRouter()
     router.push('/login')
   }
+
   return (
-    <div>
-      Dashboard
-    </div>
+    <>
+    <DashBoard />
+    </>
   )
 }
 
