@@ -9,18 +9,21 @@ const Dashboard = () => {
   const { data: session } = useSession()
   const router = useRouter()
 
-  useEffect(()=>{
+  useEffect(() => {
+    document.title = 'Dashboard - Get Me A Chai';
     if (!session) {
       router.push('/login')
     }
-  },[session, router])
-  
+  }, [session, router])
+
 
   return (
     <>
-    <DashBoard />
+      <DashBoard />
     </>
   )
 }
 
 export default Dashboard
+
+

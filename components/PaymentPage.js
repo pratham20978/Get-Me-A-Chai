@@ -3,18 +3,46 @@ import React, { useEffect, useState } from 'react'
 import Script from 'next/script'
 import { initiate, fetchuser, fetchpayments } from '@/actions/useractions'
 import { useSession } from 'next-auth/react'
+import { SearchParamsContext } from 'next/dist/shared/lib/hooks-client-context.shared-runtime'
+import { useSearchParams } from 'next/navigation'
+import { ToastContainer, toast , Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/navigation'
+
+
 
 
 const PaymentPage = ({ username }) => {
-    // const { data: session } = useSession()
+    const { data: session } = useSession()
 
     const [paymentform, setPaymentform] = useState({ name: "", message: "", amount: "" })
     const [currentUser, setcurrentUser] = useState({})
     const [payments, setPayments] = useState([])
+    const searchParams = useSearchParams()
+    const router = useRouter()
 
     useEffect(() => {
         getData()
     }, [])
+
+    useEffect(() => {
+        if (searchParams.get("paymentdone") == "true" ) {
+            toast('Payment has been made', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+        }
+        router.push(`/${username}`)
+
+    }, [])
+
 
     const handleChange = (e) => {
         setPaymentform({ ...paymentform, [e.target.name]: e.target.value })
@@ -64,6 +92,21 @@ const PaymentPage = ({ username }) => {
 
     return (
         <>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce} />
+
+            {/* Same as */}
+            <ToastContainer />
             <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
             <div className='cover w-full bg-red-50 relative flex justify-center'>
@@ -77,10 +120,10 @@ const PaymentPage = ({ username }) => {
                     @{username}
                 </div>
                 <div className='text-slate-400'>
-                    Creating Animated art for VTT's
+                    Lets help {username} get a chai!
                 </div>
                 <div className='text-slate-400'>
-                    9,712 members . 82 posts . $15,450/release
+                    {payments.filter(p => p.done).length} Payments . ₹{payments.reduce((a,b)=>a+b.amount,0)} raised
                 </div>
 
                 <div className="payment flex gap-3 w-[80%] mt-11">
@@ -91,12 +134,13 @@ const PaymentPage = ({ username }) => {
                             {payments.length == 0 && <li className='text-gray-600' >No Payments</li>}
                             {payments.map((p, i) => {
                                 return (
-                                    <li key={i} className='my-3 flex gap-2 items-center'>
-                                        <img width={30} src="/avatar.gif" alt="user avatar" />
-                                        <span>
-                                            {p.name} donated <span className='font-bold'>₹{p.amount}</span> with a message "{p.message}"
-                                        </span>
-                                    </li>
+                                    p.done && (
+                                        <li key={i} className='my-3 flex gap-2 items-center'>
+                                            <img width={30} src="/avatar.gif" alt="user avatar" />
+                                            <span>
+                                                {p.name} donated <span className='font-bold'>₹{p.amount}</span> with a message "{p.message}"
+                                            </span>
+                                        </li>)
                                 )
                             })}
 
@@ -110,7 +154,7 @@ const PaymentPage = ({ username }) => {
                             <input onChange={handleChange} name="name" value={paymentform.name} type="text" className='w-full p-3 rounded-lg bg-slate-800' placeholder='Enter Name' />
                             <input onChange={handleChange} name="message" value={paymentform.message} type="text" className='w-full p-3 rounded-lg bg-slate-800' placeholder='Enter Message' />
                             <input onChange={handleChange} name="amount" value={paymentform.amount} type="text" className='w-full p-3 rounded-lg bg-slate-800' placeholder='Enter Amount' />
-                            <button onClick={() => pay(Number.parseInt(paymentform.amount) * 100)} type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Pay</button>
+                            <button onClick={() => pay(Number.parseInt(paymentform.amount) * 100)} type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 disabled:from-purple-100 disabled:bg-slate-600 " disabled={paymentform.name?.length < 3 || paymentform.message?.length < 4 || paymentform.amount<1}>Pay</button>
                         </div>
                         {/* Or choose from these amounts */}
                         <div className="flex gap-2 mt-5">

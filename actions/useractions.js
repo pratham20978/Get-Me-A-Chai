@@ -9,7 +9,10 @@ import User from "@/models/User"
 export const initiate = async (amount, to_username, paymentform) => {
 
   await connectDB()
-  var instance = new Razorpay({ key_id: process.env.NEXT_PUBLIC_KEY_ID, key_secret: process.env.KEY_SECRET })
+  let user = await User.findOne({ username: to_username })
+  const secret = user.razorpaysecret
+
+  var instance = new Razorpay({ key_id: user.razorpayid, key_secret: secret })
 
   instance.orders.create({
     amount: 5000,
@@ -30,7 +33,7 @@ export const initiate = async (amount, to_username, paymentform) => {
 
 
   // create a payment object whcih shows a pending payment in the database
-  await Payment.create({ old: x.id, amount: amount/100, to_user: to_username, name: paymentform.name, message: paymentform.message })
+  await Payment.create({ old: x.id, amount: amount / 100, to_user: to_username, name: paymentform.name, message: paymentform.message })
 
   return x;
 
@@ -48,7 +51,7 @@ export const fetchuser = async (username) => {
 export const fetchpayments = async (username) => {
   await connectDB()
   // find all payments sorted by decreasing order of amount and flattend object ids
-  let p = await Payment.find({ to_user: username, done: true }).sort({ amount: -1 }).lean()
+  let p = await Payment.find({ to_user: username }).sort({ amount: -1 }).limit(10).lean()
 
   return p;
 }
@@ -59,9 +62,15 @@ export const updateProfile = async (data, oldusername) => {
   // if the username is being updated, check if username is available
   if (mdata.username !== oldusername) {
     let u = await User.findOne({ username: mdata.username })
-    if(u){
-      return {error: "Username already exists"}
+    if (u) {
+      return { error: "Username already exists" }
     }
+    await User.updateOne({ email: mdata.email }, mdata)
+    // now update all the username in the Payment table
+    await Payment.updateMany({to_user: oldusername}, {to_user: mdata.username})
+
+  } else {
+
+    await User.updateOne({ email: mdata.email }, mdata)
   }
-  await User.updateOne({email:mdata.email}, mdata)
 }
