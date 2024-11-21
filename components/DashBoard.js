@@ -33,6 +33,7 @@ const DashBoard = () => {
     }
 
     const handleSubmit = async (e) => {
+        console.log(e)
 
         let a = await updateProfile(e, session.user.name)
         toast('Profile Updated', {

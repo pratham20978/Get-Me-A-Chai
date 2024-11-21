@@ -8,7 +8,9 @@ const UserSchema = new Schema({
     profilepic: {type: String},
     coverpic: {type: String},
     createdAt: {type: Date, default: Date.now},
-    updatedAt: {type: Date, default: Date.now}
+    updatedAt: {type: Date, default: Date.now},
+    razorpaysecret: {type: String} ,
+    razorpayid: {type: String}
 })
 
 const User = models.User || model("User", UserSchema )

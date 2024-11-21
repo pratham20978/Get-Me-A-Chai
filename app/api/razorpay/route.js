@@ -12,21 +12,25 @@ export const POST = async (req)=>{
     body = Object.fromEntries(body)
 
     // check if razopayorderid is present on the server
-    let p = await Payment.findOne({old: body.razorapy_order_id})
+    let p = await Payment.findOne({old: body.razorpay_order_id})
+    console.log(body.razorpay_order_id);
+    console.log("Hellow");
+    
+    
     if(!p){
-        return NextResponse.error("Order Id not found")
+        return NextResponse.json({success: false, message: "Order Id not found"})
     }
 
     // varify payment
-    let xx = validatePaymentVerification({"order_id": body.razorapy_order_id, "razorpay_payment_id": body.razorpay_payment_id, "razorpay_signature": body.razorpay_signature }, process.env.KEY_SECRET)
+    let xx = validatePaymentVerification({"order_id": body.razorpay_order_id, "payment_id": body.razorpay_payment_id}, body.razorpay_signature , process.env.KEY_SECRET)
 
     if(xx){
         // update the payment status
-        const updatePayment = await Payment.findByIdAndUpdate({old: razorapy_order_id}, {done: true},{new: true})
+        const updatePayment = await Payment.findOneAndUpdate({old: body.razorpay_order_id}, {done: true},{new: true})
         return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/${updatePayment.to_user}?paymentdone=true`)
     }
     else{
-        return NextResponse.error("Payment varification failed")
+        return NextResponse.json({success:false, message:"Payment varification failed"})
     }
 
 }

@@ -15,8 +15,6 @@ const Username = ({ params }) => {
   // }
   return (
     <>
-    
-      console.log({resolvedParams.username});
       
       <PaymentPage username={resolvedParams.username} />
     </>
