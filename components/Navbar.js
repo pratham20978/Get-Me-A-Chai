@@ -8,7 +8,7 @@ const Navbar = () => {
   const [showdropdown, setShowdropdown] = useState(false)
 
   return (
-    <nav className='bg-[#000000] text-white flex justify-between items-center px-4 h-16'>
+    <nav className='bg-[#000000] text-white flex justify-between items-center px-4 sm:h-16 flex-col sm:flex-row gap-2 '>
       <div>
         <Link href="/" className="logo font-bold text-lg flex justify-center items-center">
           <img className='invertImg' src="/tea.gif" width={44} alt="" />
@@ -23,7 +23,7 @@ const Navbar = () => {
         <li>Login</li>
       </ul> */}
 
-      <div className='relative'>
+      <div className='relative flex flex-row'>
         {session && <><button onClick={() => { setShowdropdown(!showdropdown) }} onBlur={() => {
           setTimeout(() => {
             setShowdropdown(false)

@@ -126,8 +126,8 @@ const PaymentPage = ({ username }) => {
                     {payments.filter(p => p.done).length} Payments . ₹{payments.reduce((a,b)=>a+b.amount,0)} raised
                 </div>
 
-                <div className="payment flex gap-3 w-[80%] mt-11">
-                    <div className="suppoters w-1/2 bg-slate-900 rounded-lg text-white p-10">
+                <div className="payment flex gap-3 w-[80%] mt-11 flex-col md:flex-row">
+                    <div className="suppoters w-full md:w-1/2 bg-slate-900 rounded-lg text-white p-10 ">
                         {/* Show list of all the suppoters as a leaderboard */}
                         <h2 className='text-lg font-bold'>Supporters</h2>
                         <ul className='mx-5 text-lg'>
@@ -147,7 +147,7 @@ const PaymentPage = ({ username }) => {
 
                         </ul>
                     </div>
-                    <div className="makePayment w-1/2 bg-slate-900 rounded-lg text-white p-10">
+                    <div className="makePayment  w-full md:w-1/2 bg-slate-900 rounded-lg text-white p-10">
                         <h1 className='text-2xl font-bold my-5'>Make Payment</h1>
                         <div className="flex flex-col gap-2">
                             {/* input for name and message */}
@@ -157,7 +157,7 @@ const PaymentPage = ({ username }) => {
                             <button onClick={() => pay(Number.parseInt(paymentform.amount) * 100)} type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 disabled:from-purple-100 disabled:bg-slate-600 " disabled={paymentform.name?.length < 3 || paymentform.message?.length < 4 || paymentform.amount<1}>Pay</button>
                         </div>
                         {/* Or choose from these amounts */}
-                        <div className="flex gap-2 mt-5">
+                        <div className="flex gap-2 mt-5 flex-col md:flex-row">
                             <button className='bg-slate-800 p-3 rounded-lg' onClick={() => pay(1000)}>Pay ₹10</button>
                             <button className='bg-slate-800 p-3 rounded-lg' onClick={() => pay(2000)}>Pay ₹20</button>
                             <button className='bg-slate-800 p-3 rounded-lg' onClick={() => pay(3000)}>Pay ₹30</button>
